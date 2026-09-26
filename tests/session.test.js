@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Chess } from 'chess.js';
-import { Session, gameOutcome, saveSession, readLibrary } from '../src/session.js';
+import { Session, gameOutcome, saveSession, readLibrary } from '../src/session.ts';
 
 test('legal moves, illegal moves and exact PGN/saved-game round trip', () => {
   const game = new Session({ color: 'b', level: 'expert' });

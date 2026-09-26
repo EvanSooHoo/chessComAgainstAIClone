@@ -36,6 +36,7 @@ Open the browser lol
 
 ```powershell
 npm test
+npm run typecheck
 npm run build
 npx playwright install chromium
 npm run test:browser
@@ -47,12 +48,45 @@ For a production build, `npm run build` then `npm run preview`. The built `dist`
 
 ## Structure
 
-- `src/main.js`: board, dialogs, interaction, exports, and saved-game UI.
-- `src/session.js`: game sessions, outcomes, PGN, persistence, and difficulty presets.
-- `src/engine.js`: Stockfish UCI worker lifecycle and cancellable searches.
+- `src/main.tsx`: mounts React in the page's `#app` element.
+- `src/App.tsx`: page layout and navigation. Start reading here.
+- `src/components/Board.tsx`: board squares, piece images, accessible labels, clicks, and dragging.
+- `src/components/GamePanel.tsx`: opponent, status, and action buttons.
+- `src/components/MoveHistory.tsx`: move list and review controls.
+- `src/components/PlayerStrip.tsx`: player labels and captured pieces.
+- `src/components/GameDialogs.tsx`: new game, saves, promotion, exports, resignation, and help.
+- `src/components/Dialog.tsx`: native modal lifecycle and Escape/backdrop handling.
+- `src/components/Icon.tsx`: the existing SVG artwork as JSX.
+- `src/useGame.ts`: React state and game actions; coordinates saving, engine replies, and cancellation.
+- `src/session.ts`: the existing game-session class, outcomes, PGN, persistence, and difficulty presets, with TypeScript types.
+- `src/engine.ts`: Stockfish UCI worker lifecycle and cancellable searches.
+- `src/types.ts`: shared types for saved games, difficulty settings, hints, and moves.
+- `src/status.ts`: converts game state into status messages.
+- `src/audio.ts` and `src/exports.ts`: browser audio and file-download helpers.
 - `src/style.css`: responsive visual design.
 - `public/pieces`: Cburnett chess pieces.
 - `scripts/copy-engine.mjs`: local engine-asset setup.
 - `tests`: rules/session tests and browser integration tests.
+
+## How the React version works
+
+The interface uses React and strict TypeScript, with Vite for development and builds.
+`.tsx` files contain JSX (HTML-like React markup); `.ts` files contain ordinary typed logic.
+The board layout, piece artwork, Stockfish settings, optional beeps, and export formats are preserved.
+There is no backend or new animation system in this migration.
+
+1. `main.tsx` mounts `App` in React Strict Mode, which also checks effect cleanup during development.
+2. `App` calls `useGame()` and passes its state and actions to components.
+3. A square's `onClick` calls `selectSquare()`. A destination click or drop calls `makeMove()`.
+4. `Session` validates the move through chess.js. The hook creates a new session object and updates React state, so JSX refreshes automatically.
+5. An effect saves the session and requests a computer reply when it is the computer's turn.
+6. `Engine.bestMove()` sends UCI commands to the Stockfish Web Worker and resolves a Promise when `bestmove` arrives.
+7. The hook validates and applies that reply. A generation counter ignores replies cancelled by undo, a new game, or unmounting.
+
+React owns the displayed board; no HTML strings or `$` selector helper are used to render it.
+The original `chess-corner-games-v1` localStorage key and JSON schema are unchanged, so existing games still load at the same browser address.
+Review builds a separate chess.js position without changing the live game.
+
+Run `npm run format` to format the TypeScript, JSX, and CSS. `npm run build` includes strict type checking.
 
 This is an independent local project, not affiliated with Chess.com. See `public/THIRD_PARTY_NOTICES.txt` for engine, rules library, and artwork credits and source links.
