@@ -1,0 +1,16 @@
+{
+  "name": "chess-com-against-ai-clone",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copy-engine.mjs",
+    "dev": "vite --host 127.0.0.1 --port 5180 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5180 --strictPort",
+    "test": "node --test tests/session.test.js",
+    "test:browser": "playwright test"
+  },
+  "dependencies": { "chess.js": "1.4.0", "stockfish": "19.0.0" },
+  "devDependencies": { "vite": "6.4.3", "@playwright/test": "^1.58.0" }
+}
