@@ -17,7 +17,17 @@ Dependencies are already installed. For a fresh checkout, install Node.js 22+ an
 
 ## Play for everyone else
 
-Open the browser lol
+Open [Chess Corner on GitHub Pages](https://evansoohoo.github.io/chessComAgainstAIClone/).
+The engine runs in your browser. Saves stay in that browser; localhost saves do not transfer to the hosted address.
+
+## Deploy to GitHub Pages
+
+Push to `main` to run `.github/workflows/pages.yml`. It installs dependencies, tests the game logic,
+builds with the repository's base path, checks the built app with real Stockfish in Chromium, and deploys `dist`.
+GitHub Pages must use **GitHub Actions** as its publishing source.
+
+To check the same build locally, run `npm run build:pages` followed by `npm run test:pages`.
+Normal `npm run dev` still serves the app at `http://127.0.0.1:5180/`.
 
 ## Features
 

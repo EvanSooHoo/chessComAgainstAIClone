@@ -10,5 +10,5 @@ export const pieceNames: Record<PieceSymbol, string> = {
 };
 
 export function pieceSrc(piece: { color: Color; type: PieceSymbol }) {
-  return `/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
+  return `${import.meta.env.BASE_URL}pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
 }

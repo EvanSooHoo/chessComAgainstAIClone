@@ -32,8 +32,8 @@ export function App() {
   return (
     <>
       <aside className="sidebar">
-        <a href="/" className="brand" aria-label="Chess Corner home">
-          <img src="/favicon.svg" alt="" />
+        <a href={import.meta.env.BASE_URL} className="brand" aria-label="Chess Corner home">
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />
           <span>
             chess<span className="brand-second">corner</span>
           </span>
@@ -62,9 +62,14 @@ export function App() {
             No account. Just chess.
           </div>
           <p>Your games stay in this browser.</p>
-          <a href="/THIRD_PARTY_NOTICES.txt" target="_blank" rel="noopener">
+          <a
+            href={`${import.meta.env.BASE_URL}THIRD_PARTY_NOTICES.txt`}
+            target="_blank"
+            rel="noopener"
+          >
             Open-source credits ↗
           </a>
+          <p>Educational project. Not affiliated with Chess.com or Lichess.</p>
         </div>
       </aside>
       <main>

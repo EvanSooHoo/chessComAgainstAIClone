@@ -15,7 +15,7 @@ export class Engine {
     if (this.ready) return this.ready;
     this.onStatus('loading');
     this.ready = new Promise((resolve, reject) => {
-      const worker = new Worker('/engine/stockfish-19-lite-single.js');
+      const worker = new Worker(`${import.meta.env.BASE_URL}engine/stockfish-19-lite-single.js`);
       this.worker = worker;
       let initialized = false;
       const timer = setTimeout(

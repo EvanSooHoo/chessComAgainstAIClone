@@ -6,13 +6,13 @@ License: GNU General Public License version 3.
 Source: https://github.com/nmrugg/stockfish.js (Stockfish 19)
 Repository: https://github.com/nmrugg/stockfish.js
 The engine binaries are copied unmodified from the pinned npm stockfish package.
-A copy of the GPL license is at /engine/COPYING.txt.
+A copy of the GPL license is at engine/COPYING.txt relative to the app URL.
 
 chess.js 1.4.0
 Copyright (c) 2025, Jeff Hlywa and contributors.
 License: BSD-2-Clause.
 Source: https://github.com/jhlywa/chess.js/tree/v1.4.0
-License text: /licenses/chess.js-LICENSE.txt
+License text: licenses/chess.js-LICENSE.txt relative to the app URL.
 
 Cburnett chess-piece SVGs
 Author: Colin M. L. Burnett.
@@ -22,7 +22,7 @@ https://github.com/lichess-org/lila/tree/master/public/piece/cburnett
 Attribution and licensing:
 https://github.com/lichess-org/lila/blob/master/COPYING.md
 Distributed under GPL version 3 (per GPL-2.0-or-later).
-License text: /engine/COPYING.txt
+License text: engine/COPYING.txt relative to the app URL.
 
 The Chess Corner name, layout, interface icons, and favicon in this project
 are independently created. No Chess.com logos or proprietary bot portraits
