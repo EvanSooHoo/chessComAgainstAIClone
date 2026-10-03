@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chess, type Color, type PieceSymbol, type Square } from 'chess.js';
 import { Engine } from './engine';
+import { MaiaEngine } from './maia';
 import { MoveAudio } from './audio';
 import { Session, LEVELS, levelFor, readLibrary, saveSession } from './session';
 import type { Busy, EngineStatus, Hint, MoveInput, SavedGame } from './types';
@@ -30,6 +31,7 @@ export function useGame() {
   const [promotion, setPromotion] = useState<MoveInput | null>(null);
   const [busy, setBusy] = useState<Busy>('');
   const [engineState, setEngineState] = useState<EngineStatus>('loading');
+  const [maiaState, setMaiaState] = useState<EngineStatus>('loading');
   const [engineError, setEngineError] = useState('');
   const [storageError, setStorageError] = useState('');
   const [games, setGames] = useState<SavedGame[]>([]);
@@ -38,6 +40,7 @@ export function useGame() {
   const [notice, setNotice] = useState('');
   const [retryCount, setRetryCount] = useState(0);
   const [engine] = useState(() => new Engine(setEngineState));
+  const [maia] = useState(() => new MaiaEngine(setMaiaState));
   const [audio] = useState(() => new MoveAudio());
   // Refs protect asynchronous replies and keep audio preference current during a search.
   const generation = useRef(0);
@@ -56,6 +59,7 @@ export function useGame() {
   function cancelSearch() {
     generation.current++;
     engine.cancel();
+    maia.cancel();
     searching.current = false;
     setBusy('');
     setEngineError('');
@@ -84,7 +88,10 @@ export function useGame() {
     setBusy(asHint ? 'hint' : 'move');
     setEngineError('');
     try {
-      const uci = await engine.bestMove(
+      const level = levelFor(session.level);
+      const uci = !asHint && level.engine === 'maia'
+        ? await maia.bestMove(session.chess, level.elo!)
+        : await engine.bestMove(
         session.chess,
         asHint ? LEVELS[4] : levelFor(session.level),
       );
@@ -130,6 +137,7 @@ export function useGame() {
       generation.current++;
       searching.current = false;
       engine.cancel();
+      maia.cancel();
       audio.dispose();
     };
   }, [engine, audio]);
@@ -144,6 +152,7 @@ export function useGame() {
         /* In-page saving already reports errors. */
       }
       engine.cancel();
+      maia.cancel();
     };
     window.addEventListener('beforeunload', beforeUnload);
     return () => window.removeEventListener('beforeunload', beforeUnload);
@@ -260,7 +269,8 @@ export function useGame() {
   function retryEngine() {
     cancelSearch();
     const token = generation.current;
-    void engine.init().catch((error) => {
+    const opponent = levelFor(session.level).engine === 'maia' ? maia : engine;
+    void opponent.init().catch((error) => {
       if (
         token === generation.current &&
         !(error instanceof Error && error.name === 'AbortError')
@@ -285,7 +295,7 @@ export function useGame() {
     hint,
     promotion,
     busy,
-    engineState,
+    engineState: levelFor(session.level).engine === 'maia' && busy !== 'hint' ? maiaState : engineState,
     engineError,
     storageError,
     games,

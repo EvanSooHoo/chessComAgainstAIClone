@@ -70,6 +70,12 @@ export const LEVELS: Level[] = [
     description:
       'Stockfish at full skill with a longer search. A serious challenge, one move at a time.',
   },
+  ...[1100, 1500, 1900].map((elo): Level => ({
+    id: `maia-${elo}`, name: 'Maia', label: `Human-like · ${elo}`,
+    engine: 'maia', elo, skill: 0, depth: 0, time: 0,
+    icon: '🌸', color: '#b784ab',
+    description: `Maia learns from human games. Practice against her ${elo} rating setting, with natural choices and human-like mistakes.`,
+  })),
 ];
 export const levelFor = (id: string) => LEVELS.find((l) => l.id === id) || LEVELS[2];
 
@@ -105,7 +111,8 @@ export class Session {
     this.updateHeaders();
   }
   updateHeaders() {
-    const bot = `${levelFor(this.level).name} (Stockfish, ${levelFor(this.level).label})`;
+    const level = levelFor(this.level);
+    const bot = `${level.name} (${level.engine === 'maia' ? 'Maia 3' : 'Stockfish'}, ${level.label})`;
     this.chess.header(
       'Event',
       'Chess Corner practice',

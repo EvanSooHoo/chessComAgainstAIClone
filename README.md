@@ -1,6 +1,12 @@
 # Chess Corner
 
-A local, no-login chess opponent inspired by the board-and-sidebar experience at Chess.com. Created in `chessComAgainstAIClone`.
+A no-login chess opponent inspired by the board-and-sidebar experience at Chess.com. Play online or run it locally.
+
+## Play online
+
+**GitHub Pages: [https://evansoohoo.github.io/chessComAgainstAIClone/](https://evansoohoo.github.io/chessComAgainstAIClone/)**
+
+Open that link to play in your browser—no installation needed. Saves stay in that browser; localhost saves do not transfer to the hosted address.
 
 ## Play (The evan instructions lol)
 
@@ -15,11 +21,6 @@ Open **http://127.0.0.1:5180**. Keep the local server running while playing. Use
 
 Dependencies are already installed. For a fresh checkout, install Node.js 22+ and run `npm install` first. Installation copies the Stockfish worker and WebAssembly binary into `public/engine`. Chess-piece SVGs are included. Runtime assets are all local: there are no API keys, accounts, paid services, remote fonts, or runtime CDN requests.
 
-## Play for everyone else
-
-Open [Chess Corner on GitHub Pages](https://evansoohoo.github.io/chessComAgainstAIClone/).
-The engine runs in your browser. Saves stay in that browser; localhost saves do not transfer to the hosted address.
-
 ## Deploy to GitHub Pages
 
 Push to `main` to run `.github/workflows/pages.yml`. It installs dependencies, tests the game logic,
@@ -30,6 +31,9 @@ To check the same build locally, run `npm run build:pages` followed by `npm run 
 Normal `npm run dev` still serves the app at `http://127.0.0.1:5180/`.
 
 ## Features
+
+- Maia 3 offers human-like play at 1100, 1500, and 1900 rating settings. Choose Maia in New game. These are model conditioning values, not calibrated opponent ratings. Hints and review still use Stockfish.
+- Maia runs in a browser worker with local ONNX Runtime assets. Her roughly 46 MB model loads on her first turn. `npm run dev`, `npm run build`, and `npm run build:pages` prepare the runtime and download a pinned, checksum-verified model if missing. The binary is ignored by Git but included in the published Pages build; no backend or API key is required. Initial setup needs internet access.
 
 - AI Slop README.md
 - Stockfish 19 Lite runs in a Web Worker, keeping the interface responsive.

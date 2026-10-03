@@ -1,5 +1,11 @@
 CHESS CORNER — THIRD-PARTY CREDITS
 
+Maia 3 (CSSLab): human chess move prediction model.
+Model project: https://github.com/CSSLab/maia3 (AGPL-3.0).
+Browser model provenance and source links: maia/README.txt.
+License texts: maia/AGPL-3.0.txt and maia/LICENSE (platform GPL-3.0).
+ONNX Runtime (Microsoft): MIT; license at maia/ONNX-Runtime-LICENSE.txt.
+
 Stockfish.js 19.0.0 (Stockfish 19 Lite, single-threaded WebAssembly)
 Copyright the Stockfish developers, Nathan Rugg, Chess.com LLC and contributors.
 License: GNU General Public License version 3.

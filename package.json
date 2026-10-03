@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/copy-engine.mjs && node scripts/prepare-maia.mjs",
+    "prebuild": "node scripts/copy-engine.mjs && node scripts/prepare-maia.mjs",
+    "prebuild:pages": "node scripts/copy-engine.mjs && node scripts/prepare-maia.mjs",
     "postinstall": "node scripts/copy-engine.mjs",
     "dev": "vite --host 127.0.0.1 --port 5180 --strictPort",
     "build": "tsc --noEmit && vite build",
@@ -17,6 +20,7 @@
   },
   "dependencies": {
     "chess.js": "1.4.0",
+    "onnxruntime-web": "^1.24.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "stockfish": "19.0.0"

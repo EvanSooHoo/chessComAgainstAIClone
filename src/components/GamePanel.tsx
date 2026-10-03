@@ -23,7 +23,9 @@ export function GamePanel({ game, onOpenDialog, onShowBoard }: GamePanelProps) {
   else if (busy) badge = 'THINKING';
   else if (viewPly !== null) badge = 'REVIEW';
   let engineLabel = 'Stockfish 19 · Ready';
+  if (bot.engine === 'maia' && busy !== 'hint') engineLabel = engineState === 'ready' ? 'Maia 3 · Ready' : 'Maia 3 · Loads on her turn';
   if (engineState === 'loading') engineLabel = 'Loading Stockfish…';
+  if (engineState === 'loading' && bot.engine === 'maia' && busy !== 'hint') engineLabel = busy === 'move' ? 'Loading Maia 3…' : 'Maia 3 · Loads on her turn';
   else if (engineState === 'error') engineLabel = 'Engine unavailable';
 
   return (
@@ -47,11 +49,11 @@ export function GamePanel({ game, onOpenDialog, onShowBoard }: GamePanelProps) {
             <h2>{bot.name}</h2>
             <div className="difficulty">
               <span>{bot.label}</span>
-              <span className="difficulty-bars" aria-label={`Difficulty ${levelIndex + 1} of 6`}>
-                {LEVELS.map((level, index) => (
+              {bot.engine !== 'maia' && <span className="difficulty-bars" aria-label={`Difficulty ${levelIndex + 1} of 6`}>
+                {LEVELS.filter(level => !level.engine).map((level, index) => (
                   <i key={level.id} className={index <= levelIndex ? 'filled' : ''} />
                 ))}
-              </span>
+              </span>}
             </div>
           </div>
           <button

@@ -16,3 +16,10 @@ await mkdir('public/engine', { recursive: true });
 for (const file of files) await copyFile(file, path.join('public/engine', path.basename(file)));
 await copyFile(path.join(root, 'Copying.txt'), 'public/engine/COPYING.txt');
 console.log('Stockfish worker, WASM, and license copied to public/engine');
+await mkdir('public/ort', { recursive: true });
+const ort = 'node_modules/onnxruntime-web/dist';
+for (const name of await readdir(ort)) {
+  if (['ort.wasm.min.js', 'ort-wasm-simd-threaded.mjs', 'ort-wasm-simd-threaded.wasm'].includes(name))
+    await copyFile(path.join(ort, name), path.join('public/ort', name));
+}
+console.log('ONNX Runtime assets copied to public/ort');

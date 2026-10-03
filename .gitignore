@@ -4,3 +4,7 @@ public/engine/
 test-results/
 playwright-report/
 *.log
+.maia-reference/
+public/ort/
+public/maia/model.onnx
+public/maia/model.onnx.download

@@ -78,7 +78,7 @@ function NewGameDialog({ game, onClose }: { game: GameController; onClose: () =>
           </div>
           <CloseButton onClose={onClose} />
         </div>
-        <p className="muted">Six challenges. Your pace. No clock.</p>
+        <p className="muted">Stockfish challenges or human-like Maia. Your pace. No clock.</p>
         <div className="opponent-grid" id="opponent-grid">
           {LEVELS.map((bot) => (
             <label className="opponent-option" key={bot.id}>
@@ -135,6 +135,7 @@ function NewGameDialog({ game, onClose }: { game: GameController; onClose: () =>
         </fieldset>
         <p className="small muted">
           Your current game stays in My games. Difficulty levels are relative, not Elo ratings.
+          {levelFor(level).engine === 'maia' && ' Maia 3 uses a human rating setting, not a guaranteed playing strength. Her 46 MB model loads on her first turn. Hints use Stockfish.'}
         </p>
         <button className="primary-button full-width" type="submit">
           Let's play <Icon name="play" />

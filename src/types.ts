@@ -14,6 +14,8 @@ export type EngineStatus = 'loading' | 'ready' | 'error';
 export type DialogName = 'new' | 'library' | 'export' | 'promotion' | 'resign' | 'help';
 
 export interface Level {
+  engine?: 'maia';
+  elo?: number;
   id: string;
   name: string;
   label: string;
