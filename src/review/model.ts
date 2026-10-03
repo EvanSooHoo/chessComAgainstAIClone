@@ -61,7 +61,8 @@ export async function analyzeGame(
       positions.push({
         cp,
         mate: chess.isCheckmate() ? 0 : null,
-        white: winPercent(cp),
+        // Finished games have exact outcomes, not estimated winning chances.
+        white: chess.isCheckmate() ? (chess.turn() === 'w' ? 0 : 100) : 50,
         bestMove: '',
         depth: 0,
       });
