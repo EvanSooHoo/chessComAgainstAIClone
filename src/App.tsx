@@ -7,10 +7,12 @@ import { PlayerStrip } from './components/PlayerStrip';
 import { GamePanel } from './components/GamePanel';
 import { GameDialogs } from './components/GameDialogs';
 import { Icon } from './components/Icon';
+import { ReviewWorkspace } from './review/ReviewWorkspace';
 
 /** Page layout. Game behavior lives in useGame; each component owns its markup. */
 export function App() {
   const game = useGame();
+  const [reviewPgn, setReviewPgn] = useState<string | null>(null);
   const [dialog, setDialog] = useState<DialogName | null>(null);
   const boardFrame = useRef<HTMLDivElement>(null);
   const bot = levelFor(game.session.level);
@@ -29,6 +31,22 @@ export function App() {
     boardFrame.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
+  function openReview(pgn: string) {
+    game.pause();
+    setDialog(null);
+    setReviewPgn(pgn);
+  }
+  if (reviewPgn !== null)
+    return (
+      <ReviewWorkspace
+        pgn={reviewPgn}
+        onClose={() => {
+          setReviewPgn(null);
+          game.unpause();
+        }}
+      />
+    );
+
   return (
     <>
       <aside className="sidebar">
@@ -40,6 +58,12 @@ export function App() {
         </a>
         <div className="nav-label">YOUR CHESS SPACE</div>
         <nav aria-label="Main navigation">
+          <button className="nav-item" onClick={() => openReview(game.session.pgn())}>
+            Review &amp; analyze
+          </button>
+          <button className="nav-item" onClick={() => openReview('')}>
+            Import PGN
+          </button>
           <button className="nav-item active" id="nav-play" onClick={showBoard}>
             <Icon name="play" />
             <span>Play computer</span>
@@ -158,7 +182,12 @@ export function App() {
           </label>
         </footer>
       </main>
-      <GameDialogs name={dialog} game={game} onClose={() => setDialog(null)} />
+      <GameDialogs
+        name={dialog}
+        game={game}
+        onClose={() => setDialog(null)}
+        onReview={openReview}
+      />
       <div id="toast" role="status" className={game.notice ? 'visible' : ''}>
         {game.notice}
       </div>

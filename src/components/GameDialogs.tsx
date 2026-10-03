@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Color, PieceSymbol } from 'chess.js';
-import { LEVELS, levelFor } from '../session';
+import { LEVELS, levelFor, Session } from '../session';
 import type { GameController } from '../useGame';
 import type { DialogName } from '../types';
 import { pieceNames, pieceSrc } from '../pieces';
@@ -13,15 +13,16 @@ interface GameDialogsProps {
   name: DialogName | null;
   game: GameController;
   onClose: () => void;
+  onReview: (pgn: string) => void;
 }
 
-export function GameDialogs({ name, game, onClose }: GameDialogsProps) {
+export function GameDialogs({ name, game, onClose, onReview }: GameDialogsProps) {
   if (game.promotion) return <PromotionDialog game={game} />;
   switch (name) {
     case 'new':
       return <NewGameDialog game={game} onClose={onClose} />;
     case 'library':
-      return <LibraryDialog game={game} onClose={onClose} />;
+      return <LibraryDialog game={game} onClose={onClose} onReview={onReview} />;
     case 'export':
       return <ExportDialog game={game} onClose={onClose} />;
     case 'help':
@@ -143,7 +144,15 @@ function NewGameDialog({ game, onClose }: { game: GameController; onClose: () =>
   );
 }
 
-function LibraryDialog({ game, onClose }: { game: GameController; onClose: () => void }) {
+function LibraryDialog({
+  game,
+  onClose,
+  onReview,
+}: {
+  game: GameController;
+  onClose: () => void;
+  onReview: (pgn: string) => void;
+}) {
   return (
     <Dialog id="library-dialog" titleId="library-title" onClose={onClose}>
       <div className="dialog-heading">
@@ -165,28 +174,36 @@ function LibraryDialog({ game, onClose }: { game: GameController; onClose: () =>
               minute: '2-digit',
             });
             return (
-              <button
-                key={record.id}
-                className="saved-game"
-                data-game-id={record.id}
-                onClick={() => {
-                  if (game.resumeGame(record.id)) onClose();
-                }}
-              >
-                <span className="mini-portrait" style={avatarStyle(bot.color)}>
-                  {bot.icon}
-                </span>
-                <span>
-                  <strong>You vs. {bot.name}</strong>
-                  <small>
-                    {date} · {Math.ceil(record.moves.length / 2)} moves ·{' '}
-                    {record.color === 'w' ? 'White' : 'Black'}
-                  </small>
-                </span>
-                <span className="saved-result">
-                  {record.result === '*' ? 'Resume' : record.result} <Icon name="chevron" />
-                </span>
-              </button>
+              <div key={record.id}>
+                <button
+                  key={record.id}
+                  className="saved-game"
+                  data-game-id={record.id}
+                  onClick={() => {
+                    if (game.resumeGame(record.id)) onClose();
+                  }}
+                >
+                  <span className="mini-portrait" style={avatarStyle(bot.color)}>
+                    {bot.icon}
+                  </span>
+                  <span>
+                    <strong>You vs. {bot.name}</strong>
+                    <small>
+                      {date} · {Math.ceil(record.moves.length / 2)} moves ·{' '}
+                      {record.color === 'w' ? 'White' : 'Black'}
+                    </small>
+                  </span>
+                  <span className="saved-result">
+                    {record.result === '*' ? 'Resume' : record.result} <Icon name="chevron" />
+                  </span>
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => onReview(Session.restore(record).pgn())}
+                >
+                  Review &amp; analyze game
+                </button>
+              </div>
             );
           })
         ) : (

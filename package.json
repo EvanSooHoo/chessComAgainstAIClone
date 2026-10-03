@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "build:pages": "tsc --noEmit && vite build --mode pages",
     "preview": "vite preview --host 127.0.0.1 --port 5180 --strictPort",
-    "test": "tsx --test tests/session.test.js",
+    "test": "tsx --test tests/session.test.js tests/review.test.ts",
     "test:browser": "playwright test",
     "test:pages": "playwright test --config playwright.pages.config.ts",
     "typecheck": "tsc --noEmit",

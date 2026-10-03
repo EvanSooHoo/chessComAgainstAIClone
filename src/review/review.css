@@ -1,0 +1,141 @@
+.review-page {
+  max-width: 1500px;
+}
+.review-reminder {
+  padding: 12px 16px;
+  background: #353d2e;
+  border-left: 3px solid #95b970;
+  border-radius: 6px;
+}
+.review-import,
+.review-method {
+  margin: 18px 0;
+  padding: 16px;
+  background: #282b27;
+  border-radius: 10px;
+}
+.review-page summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.review-page textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  margin: 12px 0;
+  padding: 12px;
+  color: #eee;
+  background: #191c19;
+  border: 1px solid #62685b;
+  border-radius: 6px;
+  resize: vertical;
+}
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 16px 0;
+}
+.review-page button:not(.square),
+.review-page select {
+  min-height: 36px;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.review-page button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.review-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr);
+  gap: 28px;
+}
+.review-grid h2 {
+  font-size: 20px;
+  margin: 10px 0;
+}
+.review-panel {
+  background: #242722;
+  border: 1px solid #404638;
+  border-radius: 14px;
+  padding: 20px;
+  min-width: 0;
+}
+.review-scores {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 14px;
+  text-align: center;
+}
+.review-scores strong {
+  display: block;
+  font-size: 32px;
+  color: #a9d37c;
+}
+.advantage-chart {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.advantage-chart circle {
+  cursor: pointer;
+}
+.review-slider {
+  width: 100%;
+  accent-color: #91bb64;
+}
+.review-moves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 240px;
+  overflow: auto;
+  margin: 20px 0;
+}
+.review-moves button {
+  background: #373c32;
+  color: #efefeb;
+  border: 1px solid transparent;
+}
+.review-moves button[aria-pressed='true'] {
+  border-color: #afd87f;
+  background: #4d633b;
+}
+.review-moves small {
+  display: block;
+  font-size: 10px;
+}
+.review-moves .blunder {
+  color: #ff9494;
+}
+.review-moves .mistake,
+.review-moves .inaccuracy {
+  color: #ffc77e;
+}
+.review-note {
+  border-top: 1px solid #4b5046;
+  padding-top: 12px;
+}
+.note-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.review-page progress {
+  width: 100%;
+  accent-color: #9ecb6e;
+}
+@media (max-width: 1000px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+  .review-panel {
+    padding: 14px;
+  }
+}
+.review-page {
+  margin: 0 auto;
+}

@@ -1,8 +1,16 @@
 import type { Chess } from 'chess.js';
 import type { EngineStatus, Level } from './types';
 
+export interface EngineEvaluation {
+  cp: number | null;
+  mate: number | null;
+  depth: number;
+  bestMove: string;
+}
+
 /** Translates async Stockfish worker messages into one Promise per search. */
 export class Engine {
+  private evaluation: EngineEvaluation = { cp: null, mate: null, depth: 0, bestMove: '' };
   private worker: Worker | null = null;
   private ready: Promise<void> | null = null;
   private rejectInit: (() => void) | null = null;
@@ -45,6 +53,15 @@ export class Engine {
       worker.onmessage = ({ data }: MessageEvent<string>) => {
         if (this.worker !== worker) return;
         for (const line of String(data).split('\n')) {
+          const score = line.match(/\bscore (cp|mate) (-?\d+)/);
+          if (this.pending && score && !/lowerbound|upperbound/.test(line)) {
+            this.evaluation = {
+              cp: score[1] === 'cp' ? Number(score[2]) : null,
+              mate: score[1] === 'mate' ? Number(score[2]) : null,
+              depth: Number(line.match(/\bdepth (\d+)/)?.[1] ?? 0),
+              bestMove: '',
+            };
+          }
           if (line === 'uciok') {
             worker.postMessage('setoption name Hash value 32');
             worker.postMessage('isready');
@@ -72,6 +89,7 @@ export class Engine {
     await ready;
     if (this.ready !== ready || !this.worker) throw new DOMException('Cancelled', 'AbortError');
     if (this.pending) throw new Error('Engine is already searching');
+    this.evaluation = { cp: null, mate: null, depth: 0, bestMove: '' };
     // Send history as well as the position so Stockfish can detect repetition.
     const history = chess.history({ verbose: true });
     const moves = history.map((move) => move.from + move.to + (move.promotion || ''));
@@ -108,5 +126,12 @@ export class Engine {
     this.worker?.terminate();
     this.worker = null;
     this.ready = null;
+  }
+
+  async evaluate(chess: Chess, time = 500): Promise<EngineEvaluation> {
+    const bestMove = await this.bestMove(chess, { skill: 20, depth: 20, time } as Level);
+    if (this.evaluation.cp === null && this.evaluation.mate === null)
+      throw new Error('Stockfish returned no evaluation. Please retry.');
+    return { ...this.evaluation, bestMove };
   }
 }

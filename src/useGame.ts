@@ -21,6 +21,7 @@ function errorMessage(error: unknown) {
 
 /** Owns game actions and side effects; components only display state and call actions. */
 export function useGame() {
+  const [paused, setPaused] = useState(false);
   const [session, setSession] = useState(loadSession);
   const [selected, setSelected] = useState<Square | null>(null);
   const [orientation, setOrientation] = useState<Color>(session.color);
@@ -75,6 +76,7 @@ export function useGame() {
   }
 
   async function requestEngine(asHint = false) {
+    if (paused) return;
     if (searching.current || session.outcome) return;
     if (!asHint && session.chess.turn() === session.color) return;
     const token = generation.current;
@@ -146,7 +148,7 @@ export function useGame() {
     window.addEventListener('beforeunload', beforeUnload);
     return () => window.removeEventListener('beforeunload', beforeUnload);
     // Search only when the actual game changes or Retry is requested, not on UI changes.
-  }, [session, retryCount]);
+  }, [session, retryCount, paused]);
 
   useEffect(() => {
     if (!notice) return;
@@ -270,6 +272,11 @@ export function useGame() {
   }
 
   return {
+    pause: () => {
+      cancelSearch();
+      setPaused(true);
+    },
+    unpause: () => setPaused(false),
     session,
     displayedChess,
     selected,
